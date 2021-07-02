@@ -13,13 +13,13 @@ const config = {
 }
 
 
-controller.notificacion = async (req, res) => {
+controller.carroCompras = async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   let pool;
    try {
       console.log('Connection Opening...');
       pool = await sql.connect(config);
-      const { recordset } = await sql.query`SELECT * FROM notificacion;`;
+      const { recordset } = await sql.query`SELECT * FROM carro_compras;`;
       res.send(recordset);
   } catch (err) {
        console.log(err)

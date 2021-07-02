@@ -1,4 +1,6 @@
-IP: http://34.121.105.4/
+const { producto } = require("./crud-nodejs-mysql-master/src/controllers/productoController")
+
+IP: http://34.69.108.162/
 
 // Producto
 POST /producto
@@ -16,6 +18,14 @@ Incorrecto return
 'producto existente' or 'categoría inexistente'
 
 DEL /producto
+
+PUT /producto
+{
+    "id_producto": 6,
+    "cantidad": 80
+}
+return
+'ok'
 
 
 // Usuario
