@@ -40,6 +40,7 @@ router.get('/carroCompras', carroComprasController.carroCompras);
 router.get('/carroProducto', productoController.carroProducto);
 router.post('/agregarProductoCarro', productoController.save);
 router.post('/factura', carroComprasController.factura);
+router.get('/factura/:id_factura', carroComprasController.facturaId);
 
 module.exports = router;
 

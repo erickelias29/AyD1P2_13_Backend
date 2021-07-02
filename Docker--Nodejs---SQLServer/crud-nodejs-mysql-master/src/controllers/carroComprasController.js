@@ -121,4 +121,31 @@ controller.factura = async (req, res) => {
     
   };
 
+controller.facturaId = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const { id_factura } = req.params;
+    console.log(req.params)
+  
+    let pool;
+    try {
+        console.log('Connection Opening...');
+        pool = await sql.connect(config);
+        const { recordset } = await sql.query`SELECT nombre, nit, telefono, forma_pago, correo_electronico, total, id_carro FROM factura 
+        JOIN carro_compras ON carro_compras_id_carro = id_carro
+        WHERE id_factura = ${id_factura};`;
+
+        const productos = await sql.query`SELECT * FROM carro_producto 
+        JOIN producto ON producto_id_producto = id_producto
+        WHERE carro_compras_id_carro = ${recordset[0].id_carro};`;
+        
+        res.send({informacion: recordset[0], productos: productos.recordset});
+
+    } catch (err) {
+         console.log(err)
+    } finally {
+        await pool.close();
+    }
+    
+  };
+
 module.exports = controller;

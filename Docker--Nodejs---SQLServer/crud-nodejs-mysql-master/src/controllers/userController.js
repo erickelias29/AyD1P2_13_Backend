@@ -58,7 +58,7 @@ controller.save = async (req, res) => {
         let recordset = await sql.query`INSERT INTO usuario (nombre, dpi, correo_electronico, contrasena, direccion) VALUES (${nombre}, ${dpi}, ${correo_electronico}, ${contrasena}, ${direccion});`;
         let id_usuario = await sql.query`SELECT IDENT_CURRENT('usuario') AS id_usuario;`;
         id_usuario = id_usuario.recordset[0];
-        recordset = await sql.query`INSERT INTO carro_compras VALUES (0.0, '1', ${id_usuario.id_usuario});`;
+        recordset = await sql.query`INSERT INTO carro_compras VALUES (0.0, '1', ${id_usuario});`;
         res.send('ok');
       } else {
         res.send('fail');
