@@ -21,7 +21,7 @@ router.post('/login', userController.login);
 // Producto
 router.get('/producto', productoController.producto);
 router.post('/producto', productoController.saveProducto);
-router.delete('/producto', productoController.deleteAllTipoReporte);
+router.delete('/producto', productoController.deleteAll);
 
 //router.get('/reporte', reporteController.reporte);
 //router.get('/reporte/:id_reporte', reporteController.reporteID);

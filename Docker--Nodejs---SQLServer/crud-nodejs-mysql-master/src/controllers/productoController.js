@@ -140,7 +140,7 @@ controller.deleteAll = async (req, res) => {
   try {
       console.log('Connection Opening...');
       pool = await sql.connect(config);
-      const recordset = await sql.query`DELETE FROM reporte;`;
+      const recordset = await sql.query`DELETE FROM producto;`;
       res.send(recordset);
   } catch (err) {
        console.log(err)

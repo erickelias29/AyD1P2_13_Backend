@@ -1,40 +1,21 @@
 IP: http://34.121.105.4/
 
-// Login
-GET /login
-{
-    "usuario": "",
-    "password": ""
+// Producto
+POST /producto
+{ 
+    "nombre": "Arma", 
+    "imagen": "url...", 
+    "precio": 3000.00,
+    "descripcion": "Blanca", 
+    "cantidad": 100, 
+    "categoria": "SEGURIDAD" 
 }
-Correcto, return
-{
-    "usuario": "",
-    "password": "",
-    "tipo_usuario": ""
-}
-Incorrecto, return
-'fail'
-
-
-// Tipo_usuario
-GET /tipo_usuario
-return
-[
-    {
-        "id_tipo_usuario": 2,
-        "descripcion": "admin"
-    },
-    ...
-]
-
-POST /tipo_usuario
-{
-    "descripcion": "cliente"
-}
-return
+Correcto return
 'ok'
+Incorrecto return
+'producto existente' or 'categoría inexistente'
 
-DEL /tipo_usuario
+DEL /producto
 
 
 // Usuario
