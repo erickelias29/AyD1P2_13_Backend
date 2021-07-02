@@ -27,6 +27,21 @@ controller.producto = async (req, res) => {
   }
 };
 
+controller.carroProducto = async (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  let pool;
+   try {
+      console.log('Connection Opening...');
+      pool = await sql.connect(config);
+      const { recordset } = await sql.query`SELECT carro_producto.cantidad, subtotal, nombre, carro_compras_id_carro FROM carro_producto JOIN producto ON producto_id_producto = id_producto;`;
+      res.send(recordset);
+  } catch (err) {
+       console.log(err)
+  } finally {
+      await pool.close();
+  }
+};
+
 /*controller.producto = async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   let pool;
@@ -85,30 +100,36 @@ controller.save = async (req, res) => {
   try {
       console.log('Connection Opening...');
       pool = await sql.connect(config);
-      const id_producto = await sql.query`SELECT * FROM producto WHERE nombre = ${nombre};`;
-      const id_usuario = await sql.query`SELECT * FROM usuario WHERE correo_electronico = ${correo_electronico};`;
-      const id_carro = await sql.query`SELECT id_carro FROM carro_compras WHERE usuario_id_usuario = ${id_usuario};`; 
-      /*const recordset = await sql.query`INSERT INTO reporte 
-        VALUES (${id_tipo_reporte.recordset[0].id_tipo_reporte}, 
-                ${zona}, 
-                ${tipo_problema},
-                GETDATE(), 
-                CAST(${hora_fecha_problema} as DATE), 
-                ${estado},
-                ${id_usuario.recordset[0].id_usuario});`;
+      let id_producto = await sql.query`SELECT id_producto FROM producto WHERE nombre = ${nombre};`;
+      id_producto = id_producto.recordset[0].id_producto;
+      let id_usuario = await sql.query`SELECT * FROM usuario WHERE correo_electronico = ${correo_electronico};`;
+      id_usuario = id_usuario.recordset[0].id_usuario;
+      let id_carro = await sql.query`SELECT TOP 1 id_carro FROM carro_compras WHERE usuario_id_usuario = ${id_usuario} ORDER BY id_carro DESC;`; 
+      id_carro = id_carro.recordset[0].id_carro;
 
-      const id_reporte = await sql.query`SELECT IDENT_CURRENT('reporte') AS id_reporte;`;
+      const recordset = await sql.query`INSERT INTO carro_producto 
+        VALUES (${cantidad}, 
+                ${subtotal}, 
+                '1',
+                ${id_producto},
+                ${id_carro});`
+      
+      const update = await sql.query`UPDATE carro_compras 
+      SET total = (SELECT total FROM carro_compras WHERE id_carro = ${id_carro}) + ${subtotal} 
+      WHERE id_carro = ${id_carro};`
 
-      res.send(id_reporte.recordset[0]);*/
+      res.send('ok');
 
   } catch (err) {
+       res.send('fail');
        console.log(err)
-       res.send('fail hora_fecha_problema');
   } finally {
       await pool.close();
   }
   
 };
+
+
 
 controller.update = async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');

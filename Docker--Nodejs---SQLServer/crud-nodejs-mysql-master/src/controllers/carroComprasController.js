@@ -53,7 +53,14 @@ controller.save = async (req, res) => {
   try {
       console.log('Connection Opening...');
       pool = await sql.connect(config);
-      const recordset = await sql.query`INSERT INTO notificacion VALUES (${detalle}, ${id_reporte});`;
+
+      let id_usuario = await sql.query`SELECT * FROM usuario WHERE correo_electronico = ${correo_electronico};`;
+      id_usuario = id_usuario.recordset[0].id_usuario;
+      let id_carro = await sql.query`SELECT TOP 1 id_carro FROM carro_compras WHERE usuario_id_usuario = ${id_usuario} ORDER BY id_carro DESC;`; 
+      id_carro = id_carro.recordset[0].id_carro;
+
+
+      const recordset = await sql.query`INSERT INTO ca VALUES (${detalle}, ${id_reporte});`;
       res.send('ok');
 
       
@@ -80,5 +87,38 @@ controller.deleteAll = async (req, res) => {
       await pool.close();
   }
 }
+
+controller.factura = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const { nombre, nit, telefono, forma_pago, correo_electronico, correo_electronico_logueado } = req.body;
+    console.log(req.body)
+  
+    let pool;
+    try {
+        console.log('Connection Opening...');
+        pool = await sql.connect(config);
+        const id_usuario = await sql.query`SELECT id_usuario FROM usuario WHERE correo_electronico = ${correo_electronico_logueado};`;
+        const id_carro = await sql.query`SELECT id_carro FROM carro_compras WHERE usuario_id_usuario = ${id_usuario.recordset[0].id_usuario};`; 
+        let recordset = await sql.query`INSERT INTO factura 
+          VALUES (${nombre}, 
+                  ${nit}, 
+                  ${telefono},
+                  ${forma_pago}, 
+                  ${correo_electronico}, 
+                  ${id_carro.recordset[0].id_carro});`;
+  
+        recordset = await sql.query`INSERT INTO carro_compras VALUES (0.0, '1', ${id_usuario.recordset[0].id_usuario});`;
+        
+        const id_factura = await sql.query`SELECT IDENT_CURRENT('factura') AS id_factura;`;
+
+        res.send(id_factura.recordset[0]);
+
+    } catch (err) {
+         console.log(err)
+    } finally {
+        await pool.close();
+    }
+    
+  };
 
 module.exports = controller;

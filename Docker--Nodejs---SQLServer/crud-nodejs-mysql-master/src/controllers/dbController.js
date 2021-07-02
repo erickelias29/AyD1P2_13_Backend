@@ -101,7 +101,11 @@ controller.script = async (req, res) => {
       recordset = await sql.query`if not exists (select * from sysobjects where name='factura' and xtype='U')
       CREATE TABLE factura (
         id_factura              INTEGER IDENTITY(1,1),
-        fecha_compra            DATE,
+        nombre                  VARCHAR(50),
+        nit                     VARCHAR(20),
+        telefono                VARCHAR(15),
+        forma_pago              VARCHAR(15),
+        correo_electronico      VARCHAR(50),
         carro_compras_id_carro  INTEGER NOT NULL,
         PRIMARY KEY (id_factura),
         FOREIGN KEY (carro_compras_id_carro) REFERENCES carro_compras(id_carro) ON DELETE CASCADE

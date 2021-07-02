@@ -7,7 +7,7 @@ const evidenciaController = require('../controllers/evidenciaController');
 const carroComprasController = require('../controllers/carroComprasController');
 
 // Script para iniciar la base
-router.get('/', dbController.script);
+router.get('/script', dbController.script);
 
 // Categorias
 router.get('/categoria', userController.categoria);
@@ -37,9 +37,9 @@ router.delete('/evidencia', evidenciaController.deleteAll);
 
 // Notificación
 router.get('/carroCompras', carroComprasController.carroCompras);
-router.get('/notificacion/:id_reporte', carroComprasController.notificacionId);
-router.post('/agregarProductoCarro', carroComprasController.save);
-router.delete('/notificacion', carroComprasController.deleteAll);
+router.get('/carroProducto', productoController.carroProducto);
+router.post('/agregarProductoCarro', productoController.save);
+router.post('/factura', carroComprasController.factura);
 
 module.exports = router;
 
