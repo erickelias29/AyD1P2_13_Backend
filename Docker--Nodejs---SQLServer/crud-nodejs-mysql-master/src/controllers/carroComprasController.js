@@ -28,6 +28,31 @@ controller.carroCompras = async (req, res) => {
   }
 };
 
+controller.carroComprasCorreo = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const { correo_electronico } = req.params
+  
+    let pool;
+     try {
+        console.log('Connection Opening...');
+        pool = await sql.connect(config);
+        const { recordset } = await sql.query`SELECT TOP 1 * FROM carro_compras 
+        JOIN usuario ON usuario_id_usuario = id_usuario
+        WHERE correo_electronico = ${correo_electronico}
+        ORDER BY id_carro DESC;`;
+
+        const productos = await sql.query`SELECT * FROM carro_producto 
+        JOIN producto ON producto_id_producto = id_producto
+        WHERE carro_compras_id_carro = ${recordset[0].id_carro}`;
+
+        res.send({informacion: recordset, productos: productos.recordset});
+    } catch (err) {
+         console.log(err)
+    } finally {
+        await pool.close();
+    }
+  };
+
 controller.notificacionId = async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   const { id_reporte } = req.params

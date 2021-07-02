@@ -37,6 +37,7 @@ router.delete('/evidencia', evidenciaController.deleteAll);
 
 // Notificación
 router.get('/carroCompras', carroComprasController.carroCompras);
+router.get('/carroCompras/:correo_electronico', carroComprasController.carroComprasCorreo);
 router.get('/carroProducto', productoController.carroProducto);
 router.post('/agregarProductoCarro', productoController.save);
 router.post('/factura', carroComprasController.factura);
