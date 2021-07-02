@@ -149,21 +149,25 @@ controller.deleteAll = async (req, res) => {
   }
 }
 
-controller.saveTipoReporte = async (req, res) => {
+controller.saveProducto = async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
-  const { descripcion } = req.body;
-  console.log(req.body)
-
+  const { nombre, imagen, precio, descripcion, cantidad, categoria } = req.body;
+  
   let pool;
   try {
       console.log('Connection Opening...');
       pool = await sql.connect(config);
-      const existe = await sql.query`SELECT * FROM tipo_reporte WHERE descripcion = ${descripcion};`;
+      const existe = await sql.query`SELECT * FROM producto WHERE nombre = ${nombre};`;
       if(existe.recordset.length == 0) {
-        const recordset = await sql.query`INSERT INTO tipo_reporte VALUES (${descripcion});`;
-        res.send('ok');
+        let recordset = await sql.query`SELECT * FROM categoria WHERE descripcion = ${categoria};`;
+        if (recordset.recordset.length == 0) {
+          res.send('categoría inexistente');
+        } else {
+          recordset = await sql.query`INSERT INTO producto VALUES (${nombre}, ${imagen}, ${precio}, ${descripcion}, ${cantidad}, '1', ${recordset.recordset[0].id_categoria});`;
+          res.send('ok');
+        }
       } else {
-        res.send('fail');
+        res.send('producto existente');
       }
       
   } catch (err) {

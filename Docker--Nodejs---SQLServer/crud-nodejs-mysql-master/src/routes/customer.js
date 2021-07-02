@@ -20,7 +20,7 @@ router.post('/login', userController.login);
 
 // Producto
 router.get('/producto', productoController.producto);
-router.post('/producto', productoController.saveTipoReporte);
+router.post('/producto', productoController.saveProducto);
 router.delete('/producto', productoController.deleteAllTipoReporte);
 
 //router.get('/reporte', reporteController.reporte);
